@@ -2,19 +2,19 @@ import numpy as np
 import scipy.io
 
 class EventSaver:
-    _event=None
 
     def __init__(self,event):
         if event==None:
             raise Exception("Event data isn't available.")
         self._event=event
+        self._event.readFromStartStamp()
 
 class EventToText(EventSaver):
     def save(self,direction):
         f=open(direction,mode="wb")
         event=[None,None,None,None]
         while self._event.readData(event):
-            f.write("{0} {1} {2} {3}\n".format(event[0],event[1],event[2],event[3]),encode="utf-8")
+            f.write("{0} {1} {2} {3}\n".format(event[0],event[1],event[2],event[3]).encode("utf-8"))
         f.close()
     
 class EventToMat(EventSaver):

@@ -1,13 +1,13 @@
-from Algorithm import Algorithm
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-class threeDCloud(Algorithm):
-    def action(self):
+class threeDCloud:
+    def action(self,Event):
+        Event.readFromStartStamp()
    
         # 正负极性时间分离
-        self._Event.readFromStartStamp()
+        Event.readFromStartStamp()
         x_n=[]
         y_n=[]
         t_n=[]
@@ -15,7 +15,7 @@ class threeDCloud(Algorithm):
         y_p=[]
         t_p=[]
         event=[0,0,0,0]
-        while(self._Event.readData(event)):
+        while(Event.readData(event)):
             if event[3]>0:
                 x_p.append(event[0])
                 y_p.append(event[1])

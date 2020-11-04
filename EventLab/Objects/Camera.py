@@ -1,8 +1,10 @@
 class Camera:
-    _picSize=[None,None]
+    _picSize=(None,None)
     _K=[]
     
     def __init__(self,picSize,K):
+        if len(picSize)!=2:
+            raise Exception("Invaild picture size.")
         self._picSize=picSize
         self._K=K
         
@@ -26,3 +28,6 @@ class Camera:
     
     def getPy(self):
         return self._K[1][2]
+
+def calibration(imgSize,k=[]):
+    return Camera(imgSize,k)

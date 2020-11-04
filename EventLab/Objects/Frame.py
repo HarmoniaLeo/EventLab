@@ -4,14 +4,13 @@ import cv2
 import os
 import numpy as np
 
-class APS:
-    __datas=[]
-    __point=0
-    __size=None
+class Frame:
 
-    def __init__(self,camera,size):
+    def __init__(self,camera=None,size=None):
+        self.__datas=[]
+        self.__point=0
         if camera==None and size==None:
-            raise Exception("Camera hasn't benn calibrated.")
+            raise Exception("Size hasn't been initialized.")
         if size!=None:
             self.__size=size
         if camera!=None:
@@ -46,9 +45,12 @@ class APS:
     
     def addData(self,ts,img):
         if img.shape!=self.__size:
-            raise Exception("APS data size error.")
+            raise Exception("Frame data size error.")
         if ts<0:
             raise Exception("Illegal timestamp.")
+        if len(self.__datas)==0:
+            self.__datas.append([ts,img])
+            return
         if ts<self.__datas[0][0]:
             self.__datas.insert(0,[ts,img])
             return
@@ -60,6 +62,29 @@ class APS:
                 return
         self.__datas.append([ts,img])
     
+    def addDataByDirection(self,ts,direction):
+        img=cv2.imread(direction,cv2.IMREAD_GRAYSCALE)
+        if img.shape!=self.__size:
+            raise Exception("Frame data size error.")
+        if ts<0:
+            raise Exception("Illegal timestamp.")
+        if len(self.__datas)==0:
+            self.__datas.append([ts,img])
+            return
+        if ts<self.__datas[0][0]:
+            self.__datas.insert(0,[ts,img])
+            return
+        for i in range(0,len(self.__datas)-1):
+            if ts==self.__datas[i][0] or ts==self.__datas[i+1][0]:
+                raise Exception("Illegal timestamp.")
+            if ts>self.__datas[i][0] and ts<self.__datas[i+1][0]:
+                self.__datas.insert(i+1,[ts,img])
+                return
+        self.__datas.append([ts,img])
+    
+    def setData(self,arr):
+        self.__datas=arr
+
     def getLength(self):
         return len(self.__datas)
     
@@ -67,7 +92,7 @@ class APS:
         return self.__size
 
 
-class APSByIndex(APS):
+class FrameByIndex(Frame):
 
     def __init__(self,camera,size,directionOfIndex,directionOfImages,stampRow,imgRow,splitSymbol,startStamp,endStamp,startIndex,endIndex):
         super().__init__(camera,size)
@@ -76,6 +101,7 @@ class APSByIndex(APS):
         i=0
         if imgRow<0:
             imgList=os.listdir(directionOfImages)
+            imgList.sort()
         while True:
             dataLine=f.readline()
             if dataLine=="":
@@ -91,7 +117,7 @@ class APSByIndex(APS):
                 i+=1
         f.close()
 
-class APSFromMat(APS):
+class FrameFromMat(Frame):
     
     def __init__(self,camera,size,direction,field,indexList,timeStampRow,imgRow,startStamp,endStamp,startIndex,endIndex):
         super().__init__(camera,size)
@@ -102,14 +128,13 @@ class APSFromMat(APS):
                 data=data[i]
         except Exception:
             raise Exception("Illegal direction or mat.")
-        num=data[timeStampRow].shape[0]
-        for i in range(0,num):
-            ts=float(data[timeStampRow][i][0])
-            if self._checkTimeStampAndIndex(ts,startStamp,endStamp,i,startIndex,endIndex):
-                img=data[imgRow][i][0]
-                self.addData(ts,img)
+        tss=data[timeStampRow].T
+        imgs=data[imgRow].T
+        indexs=np.where((tss>=startStamp)&(tss<=endStamp))
+        imgs=imgs[indexs]
+        self.setData(np.array([tss,imgs]).T.tolist())
 
-class APSFromVideo(APS):
+class FrameFromVideo(Frame):
     
     def __init__(self,camera,size,direction,startStamp,endStamp,startIndex,endIndex):
         super().__init__(camera,size)
@@ -124,8 +149,9 @@ class APSFromVideo(APS):
             if self._checkTimeStampAndIndex(ts,startStamp,endStamp,i,startIndex,endIndex):
                 ret, img = cap.read()
                 if img.shape!=camera.getSize():
-                    raise Exception("APS data size error.")
+                    raise Exception("Frame data size error.")
                 self.addData(ts,img)
             ts+=1/fr
             i+=1
         cap.release()
+
