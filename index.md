@@ -356,9 +356,10 @@ class FrameSaverToMyFormat(FrameSaver):
 ## 5 从相机直接读取数据
 
 ### 5.1 inivation
+请将项目Drives目录下的指定文件拷贝至工程目录
 
 ```python
-direction="davis_simple.dylib"	#macos
+direction="davis_simple.dylib"	#OSX
 direction="davis_simple.so"	#linux
 
 startStamp=0	#开始时间戳（默认为0）
