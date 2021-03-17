@@ -424,8 +424,8 @@ def myDisplayAlgorithm(self,event,frames,...):	#在算法中传入需要的数�
 ##### 事件点建帧
 
 ```python
-EventLab.Process.BuildFrame(event,frames,exposureTime,showTime)	#将event和frames同步展示。每展示一张frames的数据，将其时间戳之后exposureTime（单位s）内的所有事件点按正红负蓝的方式建帧，并同步展示。每次展示showTime秒
-EventLab.Process.BuildFrameWithTs(event,showTime,frameRate)	#从时间戳开始时刻开始，将每1/frameRate时间内的事件点按正红负蓝的方式建帧并展示。每次展示showTime秒
+EventLab.Display.BuildFrame(event,frames,exposureTime,showTime)	#将event和frames同步展示。每展示一张frames的数据，将其时间戳之后exposureTime（单位s）内的所有事件点按正红负蓝的方式建帧，并同步展示。每次展示showTime秒
+EventLab.Display.BuildFrameWithTs(event,showTime,frameRate)	#从时间戳开始时刻开始，将每1/frameRate时间内的事件点按正红负蓝的方式建帧并展示。每次展示showTime秒
 ```
 
 ##### 3D点云
