@@ -48,7 +48,7 @@ class EventCamera:
     def DynamicInput(self,direction,startStamp,endStamp):
         return EventLab.Datas.DynamicInput(direction,startStamp,endStamp)
     
-    
-
-    
-    
+def calibration(self,imgSize,K=[]):
+    camera=EventCamera()
+    camera.calibration(imgSize,K)
+    return camera
