@@ -89,7 +89,7 @@ timeStampRow=0	#时间戳位于每一行的哪一列（默认为0）
 polarityRow=3	#极性位于每一行的哪一列（默认为3）
 splitSymbol=" "	#每一行用于分割列的字符（默认为空格）
 startStamp=0	#开始时间戳（默认为0）
-endStamp=0x7fffffff	#结束时间戳（默认为64位最大浮点数）
+endStamp=np.inf	#结束时间戳（默认为numpy自带无穷大数）
 
 event=camera.readEventFromText(direction,xRow,yRow,timeStampRow,polarityRow,startStamp,endStamp)	#从已知相机的数据文件读取
 
@@ -108,7 +108,7 @@ yRow=2	#y坐标位于储存事件数据的二维数组的哪一列（默认为2�
 timeStampRow=0	#时间戳位于储存事件数据的二维数组的哪一列（默认为0）
 polarityRow=3	#极性位于储存事件数据的二维数组的哪一列（默认为3）
 startStamp=0	#开始时间戳（默认为0）
-endStamp=0x7fffffff	#结束时间戳（默认为64位最大浮点数）
+endStamp=np.inf	#结束时间戳（默认为numpy自带无穷大数）
 
 event=camera.readEventFromMat(direction,xRow,yRow,timeStampRow,polarityRow,startStamp,endStamp)	#从已知相机的数据文件读取
 
@@ -233,7 +233,7 @@ indexList=[]	#指定索引列表，由于.mat文件每个字段下是高维的�
 timeStampRow=0	#时间戳位于储存APS数据的二维数组的哪一列（默认为0）
 polarityRow=3	#图片位于储存APS数据的二维数组的哪一列（默认为1）
 startStamp=0	#开始时间戳（默认为0）
-endStamp=0x7fffffff	#结束时间戳（默认为64位最大浮点数）
+endStamp=np.inf	#结束时间戳（默认为numpy自带无穷大数）
 startIndex=0	#开始的图片张数（默认不指定，同时指定开始的图片张数和开始时间戳时，以开始的图片张数优先）
 endIndex=10	#结束的图片张数（默认不指定，同时指定结束的图片张数和结束时间戳时，以结束的图片张数优先）
 
@@ -248,7 +248,7 @@ frames=EventLab.Datas.readFrameFromMat(size,direction,field,indexList,xRow,yRow,
 ```python
 direction=""	#视频文件路径
 startStamp=0	#开始时间戳（默认为0）
-endStamp=0x7fffffff	#结束时间戳（默认为64位最大浮点数，即视频末尾）
+endStamp=np.inf	#结束时间戳（默认为numpy自带无穷大数）
 startIndex=0	#开始于第几帧（默认不指定，即从头开始）
 endIndex=10	#结束于第几帧（默认不指定，即视频末尾）
 
@@ -363,7 +363,7 @@ direction="davis_simple.dylib"	#OSX
 direction="davis_simple.so"	#linux
 
 startStamp=0	#开始时间戳（默认为0）
-endStamp=0x7fffffff	#结束时间戳（默认为64位最大浮点数）
+endStamp=np.inf	#结束时间戳（默认为numpy自带无穷大数）
 
 event,frames=EventLab.EventCamera.DynamicInput(direction,startStamp,endStamp)
 ```
