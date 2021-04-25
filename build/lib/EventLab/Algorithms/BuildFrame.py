@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import cv2
 
 class BuildFrame:
     def action(self,event,frame,size,exposureTime,showTime):
@@ -54,4 +55,28 @@ class BuildFrameWithTs:
             plt.imshow(eventFrame)
             plt.title("time:"+str(timeNow))
             plt.pause(showTime)
+            del eventFrame
+
+class BuildFrameAndSave:
+    def action(self,event,size,frameRate,direction):
+        event.readFromStartStamp()
+        eventData=[0,0,0,0]
+        i=0
+        while(event.readData(eventData)):
+            eventFrame=np.stack(np.stack(np.zeros(size)+255,np.zeros(size)+255,np.zeros(size)+255),axis=2)
+            timeNow=eventData[2]
+            while(True):
+                if(eventData[2]>=timeNow+1/frameRate):
+                    break
+                x=eventData[0]
+                y=eventData[1]
+                if eventData[3]==0:
+                    eventFrame[y,x,0]=0
+                    eventFrame[y,x,1]=0
+                else:
+                    eventFrame[y,x,1]=0
+                    eventFrame[y,x,2]=0
+                event.readData(eventData)
+            cv2.imwrite(direction+"{0}.jpg".format(i),eventFrame)
+            i+=1
             del eventFrame
